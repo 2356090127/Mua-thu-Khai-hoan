@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bản đồ diễn biến</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      height: 100%;
+    }
+
+    .container {
+      position: relative;
+      height: 400vh; /* số ảnh x 100vh */
+    }
+
+    .layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.2s linear;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="layer" style="background-image: url('dienbien1.png'); opacity:1"></div>
+    <div class="layer" style="background-image: url('dienbien2.png');"></div>
+    <div class="layer" style="background-image: url('dienbien3.png');"></div>
+  </div>
+
+  <script>
+    const layers = document.querySelectorAll('.layer');
+    const numLayers = layers.length;
+
+    window.addEventListener('scroll', () => {
+      let scrollY = window.scrollY;
+      let windowH = window.innerHeight;
+      let totalScroll = scrollY / (windowH * (numLayers - 1));
+
+      layers.forEach((layer, i) => {
+        let start = i / (numLayers - 1);
+        let end = (i + 1) / (numLayers - 1);
+
+        if (totalScroll >= start && totalScroll <= end) {
+          // tính phần trăm fade
+          let progress = (totalScroll - start) / (end - start);
+          layer.style.opacity = 1 - progress;
+          if (layers[i + 1]) {
+            layers[i + 1].style.opacity = progress;
+          }
+        } else if (totalScroll < start) {
+          layer.style.opacity = 0;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
